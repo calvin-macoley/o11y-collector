@@ -1,0 +1,16 @@
+---
+
+- name: "Common | System packages are being upgraded"
+  become: true
+  apt:
+    update_cache: yes
+    upgrade: yes
+
+- name: "Common | Utilities tools are being installed"
+  become: true
+  apt:
+    name:
+      - git
+      - curl
+      - wget
+    state: present

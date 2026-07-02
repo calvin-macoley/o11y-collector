@@ -1,0 +1,12 @@
+---
+- name: Alloy is installed
+  hosts: all
+  become: true
+  environment:
+    PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  tasks:
+    - name: Alloy role are installed
+      ansible.builtin.include_role:
+        name: alloy_install
+      vars:
+        alloy_install: install
