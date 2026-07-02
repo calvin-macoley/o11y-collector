@@ -1,5 +1,8 @@
 prometheus.scrape "default" {
   targets = [{"__address__" = "localhost:12345"}]
+
+  clustering { enabled = true }
+
   forward_to = [prometheus.remote_write.prom.receiver]
 }
 
