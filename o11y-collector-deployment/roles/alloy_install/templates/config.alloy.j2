@@ -1,0 +1,10 @@
+prometheus.scrape "default" {
+  targets = [{"__address__" = "localhost:12345"}]
+  forward_to = [prometheus.remote_write.prom.receiver]
+}
+
+prometheus.remote_write "prom" {
+  endpoint {
+      url = "{{ alloy__url.endpoint }}"
+  }
+}

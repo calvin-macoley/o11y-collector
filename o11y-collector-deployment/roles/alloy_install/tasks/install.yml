@@ -4,13 +4,4 @@
   ansible.builtin.include_role:
     name: grafana.grafana.alloy
   vars:
-    alloy_config: |
-      prometheus.scrape "default" {
-        targets = [{"__address__" = "localhost:12345"}]
-        forward_to = [prometheus.remote_write.prom.receiver]
-      }
-      prometheus.remote_write "prom" {
-        endpoint {
-            url = "<YOUR_PROMETHEUS_PUSH_ENDPOINT>"
-        }
-      }
+    alloy_config: "{{ lookup('ansible.builtin.template', 'config.alloy.j2') }}"

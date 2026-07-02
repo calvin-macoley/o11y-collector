@@ -1,38 +1,25 @@
-Role Name
-=========
+alloy_install
+=============
 
-A brief description of the role goes here.
+Installs Grafana Alloy via the `grafana.grafana.alloy` collection role.
 
-Requirements
-------------
+Alloy configuration
+-------------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+The Alloy configuration is not written inline in the tasks. It lives in
+[`templates/config.alloy.j2`](templates/config.alloy.j2), which is rendered on
+the control node with a template lookup and passed to the collection role as
+the `alloy_config` variable:
 
-Role Variables
---------------
+```yaml
+alloy_config: "{{ lookup('ansible.builtin.template', 'config.alloy.j2') }}"
+```
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Because the lookup runs inside this role, the bare filename resolves to this
+role's `templates/` directory. The template has access to all inventory
+variables, so per-environment values (e.g. the remote-write endpoint from
+`group_vars`) are interpolated at render time.
 
-Dependencies
-------------
-
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
-
-Example Playbook
-----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
-
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+To change the Alloy pipeline, edit `templates/config.alloy.j2` — not the task
+file. Anything that must stay a literal `{{ }}` in the final Alloy config has
+to be escaped in the template as `{{ '{{' }}`.
