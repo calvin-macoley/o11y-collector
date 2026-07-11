@@ -1,7 +1,9 @@
 ---
 
+- name: "Install | The Alloy configuration is rendered"
+  ansible.builtin.set_fact:
+    alloy_config: "{{ lookup('ansible.builtin.template', 'config.alloy.j2') }}"
+
 - name: "Install | Alloy is being installed"
   ansible.builtin.include_role:
     name: grafana.grafana.alloy
-  vars:
-    alloy_config: "{{ lookup('ansible.builtin.template', 'config.alloy.j2') }}"

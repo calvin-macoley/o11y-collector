@@ -1,13 +1,26 @@
-prometheus.scrape "default" {
-  targets = [{"__address__" = "localhost:12345"}]
+prometheus.scrape "node_exporter" {
+  targets = [
+  {% for target in alloy_install__alloy_targets %}
+    {
+      "__address__" = "{{ target.target }}:9100",
+      instance = "{{ target.instance }}",
+    },
+    {% endfor %}
+  ]
 
-  clustering { enabled = true }
+  scrape_interval = "{{ alloy_install__scrape_configs.scrape_interval }}"
+  job_name = "asgard_nodes"
 
-  forward_to = [prometheus.remote_write.prom.receiver]
+  forward_to = [prometheus.remote_write.mimir.receiver]
 }
 
-prometheus.remote_write "prom" {
+prometheus.remote_write "mimir" {
+{% for rw in alloy_install__remote_write %}
   endpoint {
-      url = "{{ alloy__url.endpoint }}"
+    url = "{{ rw.endpoint }}"
+{% if rw.tenant is defined %}
+    headers = { "X-Scope-OrgID" = "{{ rw.tenant }}" }
+{% endif %}
   }
+{% endfor %}
 }

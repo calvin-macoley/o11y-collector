@@ -1,3 +1,7 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # vars file for roles/alloy_install
+alloy_install__alloy_targets: "{{ targets_alloy | default([]) }}"
+
+alloy_install__scrape_configs: "{{ scrape_configs }}"
+alloy_install__remote_write: "{{ remote_write_alloy | default([]) }}"

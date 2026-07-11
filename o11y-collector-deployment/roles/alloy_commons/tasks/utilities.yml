@@ -13,4 +13,5 @@
       - git
       - curl
       - wget
+      - jq
     state: present
